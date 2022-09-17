@@ -177,7 +177,7 @@ class Graph:
         self.print_path("BDS", path_start, path_end)
 
     # Informed Search
-    def GBFS(self, start, end):
+    def GDFS(self, start, end, F=False):
         pd_open = PriorityQueue()
         path = []
         set_open = set()
@@ -190,32 +190,73 @@ class Graph:
             if flag or start == end:
                 break
             dis, node = pd_open.get()
-            path.append(node)
+            path.append(node+"("+str(dis)+")")
             distance += dis
             set_close.add(node)
             for i in self.adjacentTo(node):
                 if i == end:
                     flag = True
                     distance += self._adj[node][i]
-                    path.append(end)
+                    path.append(end+"("+str(self._adj[node][i])+")")
                     break
                 if i not in set_open and i not in set_close:
                     pd_open.put((self._adj[node][i], i))
                     set_open.add(i)
-        # self.print_path("GBFS", path)
-        # print("Total distance of GBFS:", distance)
+        if F:
+            self.print_path("GDFS", path)
+            print("Total distance of GDFS:", distance)
         return distance
 
-    def heuristics(self, city):
-        for i in self.vertices():
-            self._h[i] = self.GBFS(i, city)
+    def GBFS(self, start, end, flag=False):
+        pd_open = PriorityQueue()
+        current_node = start
+        close_set = set()
+        open_set = set()
+        open_set.add(start)
+        parents = {start: start}
+        while current_node != end:
+            for n in self.adjacentTo(current_node):
+                if n in close_set:
+                    continue
+                else:
+                    parents[n] = current_node
+                    if n not in open_set:
+                        open_set.add(n)
+                        pd_open.put((self._adj[current_node][n], n))
+            if len(open_set) == 0:
+                break
+            # 选择了open_set中边长最短的边
+            dis, current_node = pd_open.get()
+            open_set.remove(current_node)
+            close_set.add(current_node)
+        path = []
+        n = end
+        distance = 0
+        parents[start] = start
+        while parents[n] != n:
+            path.append(n + "(" + str(self._adj[n][parents[n]]) + ")")
+            distance += self._adj[n][parents[n]]
+            n = parents[n]
+        path.append(start + "(0)")
+        path.reverse()
+        if flag:
+            self.print_path("GBFS", path)
+            print("Total distance of GBFS:", distance)
+        return distance
+
+    def heuristics(self, city, method="GBFS"):
+        if method == "GBFS":
+            for i in self.vertices():
+                self._h[i] = self.GBFS(i, city)
+        else:
+            for i in self.vertices():
+                self._h[i] = self.GDFS(i, city)
 
     def print_heuristics_table(self):
         for key, value in self.iter_h():
             print(key + ": " + str(value))
 
     def a_star(self, start, end):
-        self.heuristics(end)
         open_list = set()
         closed_list = set()
         open_list.add(start)
@@ -239,7 +280,7 @@ class Graph:
                 path.append(start + "(0)")
                 path.reverse()
                 self.print_path("A_star", path)
-                print("Distance:", distance)
+                print("Total distance of A_star:", distance)
                 return distance
             for m in self.adjacentTo(n):
                 weight = self._adj[n][m]
@@ -263,10 +304,16 @@ class Graph:
 if __name__ == '__main__':
     G = Graph('./distances.txt')
     # print(G)
+    print("Uninformed Search:")
     G.BFS('Мурманск', 'Одесса')
     G.DFS('Мурманск', 'Одесса')
     G.DLS('Мурманск', 'Одесса', 10)
     G.IDDFS('Мурманск', 'Одесса', 10)
     G.BDS('Мурманск', 'Одесса')
-    # G.print_heuristics_table()
+    print("Informed Search:")
+    G.GDFS('Мурманск', 'Одесса', True)
+    G.GBFS('Мурманск', 'Одесса', True)
+    G.heuristics('Одесса')
+    #G.print_heuristics_table()
     G.a_star('Мурманск', 'Одесса')
+
