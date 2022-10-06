@@ -1,6 +1,7 @@
 # Artificial Intelligence System
 
 This project includes five experimental works of Artificial Intelligence Systems, and learning to implement Neural Networks using Pytorch.  
+
 ![](https://img.shields.io/badge/wechat-Spbgzh-green)       ![](https://img.shields.io/badge/mail-zjjhgzh%40gmail.com-blue)
 
 ## Lab1
