@@ -43,6 +43,11 @@ Require:
 4. Evaluate the implemented algorithm using Accuracy, precision and recall  
 5. Build AUC-ROC and AUC-PR  
 
+## Lab4
+
+There are 2 part of work, for each one you need to chang given hyperparameters and try to reach max accuracy value.  
+
+
 ## Neural Networks
 
 Implemented NN and CNN algorithms in neural networks using pytorch
