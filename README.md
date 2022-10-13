@@ -45,8 +45,8 @@ Require:
 
 ## Lab4
 
-There are 2 part of work, for each one you need to chang given hyperparameters and try to reach max accuracy value.  
-
+Using Neural Networks to deal with problems(Function and Dataset).  
+There are 2 part of work, for each one you need to change given hyperparameters and try to reach max accuracy value.  
 
 ## Neural Networks
 
